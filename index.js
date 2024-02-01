@@ -1,14 +1,30 @@
-// run `node index.js` in the terminal
 const express = require('express');
-const path = require('path');
-
 const app = express();
+const port = 3001;
+let result = 0;
 
-app.get('/test', function (req, res) {
-  console.log('path: ', path.join(__dirname));
-  res.send('ok');
+app.get('/', (req, res) => {
+  res.send('Hello World!');
 });
 
-console.log(`Hello Node.js v${process.versions.node}!`);
+app.post('/add/:number', (req, res) => {
+  const { number } = req.params;
+  const isNumber = !isNaN(number);
+  try {
+    res.status(223);
+    if (!isNumber) throw 'Parameter is not a number!';
+    result += parseInt(number);
+    res.json({ result });
+  } catch (e) {
+    res.send(e);
+  }
+});
 
-app.listen(3000);
+app.delete('/add/', (req, res) => {
+  result = 0;
+  res.send('Deleted!');
+});
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`);
+});
